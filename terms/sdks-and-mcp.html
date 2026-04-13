@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SDKs and MCP — Terminology Hub</title>
+<link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="../index.html" class="site-logo">Terminology Hub</a>
+    <nav class="site-nav">
+      <a href="../index.html#terms">All Terms</a>
+      <a href="../index.html#disciplines">Disciplines</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <div class="term-page">
+
+    <article class="term-main">
+
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a> &rsaquo;
+        <a href="../index.html#terms">Terms</a> &rsaquo;
+        SDKs and MCP
+      </div>
+
+      <h1>SDKs and MCP</h1>
+
+      <div><span class="tag tag-ml">Machine Learning</span> <span class="tag tag-gen">Generative</span></div>
+
+      <div class="tldr">
+        <strong>TL;DR</strong>
+        <p>Software development kits (SDKs) give developers packaged tools for building applications, while the Model Context Protocol (MCP) is a standard way for AI systems to connect to tools, data, and external services. Together, they make it easier to build reliable applications that let models do useful work outside the model itself.</p>
+      </div>
+
+      <h2 id="overview">Overview</h2>
+      <p>An SDK is a bundle of code, libraries, and documentation that helps developers use a platform or API without starting from scratch. Good SDKs hide repetitive setup work, provide clear interfaces, and make common tasks easier and safer.</p><p>MCP, short for Model Context Protocol, is a protocol for exposing tools, resources, and prompts to AI assistants in a standard format. Instead of building a custom integration for every model and every service, developers can use MCP to give models a more consistent way to discover capabilities and interact with outside systems.</p><p>They are related but not the same: an SDK is a developer convenience layer, while MCP is an interoperability standard. In practice, developers often use an SDK to implement or consume MCP servers and clients.</p>
+
+      <h2 id="diagram">Visual</h2>
+      <figure>
+        <svg viewBox='0 0 800 300' xmlns='http://www.w3.org/2000/svg'><rect width='800' height='300' fill='#faf8f3'/><rect x='40' y='90' width='150' height='120' rx='12' fill='#98c1d9'/><text x='115' y='135' text-anchor='middle' font-family='Iowan Old Style, Georgia, serif' font-size='24' fill='#293241'>Developer</text><text x='115' y='165' text-anchor='middle' font-family='Iowan Old Style, Georgia, serif' font-size='18' fill='#293241'>uses SDK</text><rect x='250' y='90' width='150' height='120' rx='12' fill='#3d5a80'/><text x='325' y='135' text-anchor='middle' font-family='Iowan Old Style, Georgia, serif' font-size='24' fill='#faf8f3'>App / Host</text><text x='325' y='165' text-anchor='middle' font-family='Iowan Old Style, Georgia, serif' font-size='18' fill='#faf8f3'>model runs here</text><rect x='470' y='40' width='130' height='80' rx='12' fill='#ee6c4d'/><text x='535' y='88' text-anchor='middle' font-family='Iowan Old Style, Georgia, serif' font-size='22' fill='#faf8f3'>MCP</text><text x='535' y='112' text-anchor='middle' font-family='Iowan Old Style, Georgia, serif' font-size='16' fill='#faf8f3'>client</text><rect x='470' y='180' width='130' height='80' rx='12' fill='#ee6c4d'/><text x='535' y='228' text-anchor='middle' font-family='Iowan Old Style, Georgia, serif' font-size='22' fill='#faf8f3'>MCP</text><text x='535' y='252' text-anchor='middle' font-family='Iowan Old Style, Georgia, serif' font-size='16' fill='#faf8f3'>server</text><rect x='650' y='90' width='110' height='120' rx='12' fill='#98c1d9'/><text x='705' y='135' text-anchor='middle' font-family='Iowan Old Style, Georgia, serif' font-size='22' fill='#293241'>Tools</text><text x='705' y='165' text-anchor='middle' font-family='Iowan Old Style, Georgia, serif' font-size='16' fill='#293241'>&amp; Data</text><path d='M190 150 H250 M400 150 H450 M600 150 H650' stroke='#293241' stroke-width='4' fill='none'/><path d='M450 150 V80 H470 M450 150 V220 H470' stroke='#293241' stroke-width='3' fill='none'/></svg>
+        <figcaption>An SDK helps a developer build the application, while MCP helps the application connect models to external tools and data in a standard way.</figcaption>
+      </figure>
+
+      <h2 id="how">How It Works</h2>
+      <p>An SDK usually wraps lower-level APIs with typed functions, authentication helpers, error handling, retries, and examples. This reduces boilerplate and encourages correct usage patterns.</p><p>MCP defines structured messages and capabilities so a host application and an external server can communicate about available tools, resources, and prompts. A model typically sits inside a host application; the host connects to one or more MCP servers, lists available capabilities, sends requests, and returns results back into the model's context.</p><ul><li><strong>SDK role:</strong> make integration easier for developers.</li><li><strong>MCP role:</strong> make tool access more standardized across systems.</li><li><strong>Together:</strong> an MCP SDK can help developers build a client or server quickly while following the protocol correctly.</li></ul>
+
+      <dl class="keyterms"><dt>SDK</dt><dd>A software development kit: packaged libraries, utilities, and documentation for building against a platform or API.</dd>
+        <dt>MCP</dt><dd>Model Context Protocol, a standard for exposing tools, resources, and prompts to AI applications.</dd>
+        <dt>Client</dt><dd>The application component that connects to a service or server and makes requests.</dd>
+        <dt>Server</dt><dd>The component that offers capabilities, data, or tools to clients through a defined interface.</dd>
+        <dt>Tool calling</dt><dd>A pattern where a model requests execution of an external function or service and uses the returned result.</dd></dl>
+
+      <h2 id="examples">Real-World Examples</h2>
+      <div class="example-grid">
+        <div class="example-card">
+       <h4>Connecting an assistant to company documents</h4>
+       <p>An MCP server can expose internal knowledge sources, while an SDK helps developers integrate authentication, search, and request handling.</p>
+     </div>
+        <div class="example-card">
+       <h4>Agent access to developer tools</h4>
+       <p>A coding assistant can use MCP to discover available actions like reading files or opening issues, with an SDK simplifying the integration.</p>
+     </div>
+        <div class="example-card">
+       <h4>Customer support automation</h4>
+       <p>A support assistant can query order systems, refund tools, or help-center content through standard tool interfaces instead of one-off connectors.</p>
+     </div>
+        <div class="example-card">
+       <h4>Multi-tool research workflows</h4>
+       <p>An application can connect a model to web search, databases, and note systems through MCP while relying on SDK abstractions for reliability.</p>
+     </div>
+        <div class="example-card">
+       <h4>Prototype-to-production app development</h4>
+       <p>Teams often start with SDK helpers for fast development and later use protocol-based integrations like MCP to make tool access more portable.</p>
+     </div>
+      </div>
+
+      
+
+      <h2 id="related">Related Terms</h2>
+      <div class="related-grid">
+        <a class="related-card" href="#">
+       <strong>API</strong>
+       <span>A defined interface that lets one software system request services or data from another.</span>
+     </a>
+        <a class="related-card" href="#">
+       <strong>Tool Calling</strong>
+       <span>A mechanism that lets language models request external function execution.</span>
+     </a>
+        <a class="related-card" href="#">
+       <strong>Function Calling</strong>
+       <span>A structured output pattern where a model emits arguments for a named function.</span>
+     </a>
+        <a class="related-card" href="#">
+       <strong>Agents</strong>
+       <span>Systems that use models plus planning, memory, and tools to complete tasks.</span>
+     </a>
+        <a class="related-card" href="#">
+       <strong>Retrieval-Augmented Generation</strong>
+       <span>A pattern where models fetch relevant external information before answering.</span>
+     </a>
+        <a class="related-card" href="#">
+       <strong>Client-Server Architecture</strong>
+       <span>A standard software design where clients request capabilities from servers.</span>
+     </a>
+      </div>
+
+      <h2 id="reading">Further Reading</h2>
+      <ul>
+        <li>Designing Data-Intensive Applications — Martin Kleppmann</li>
+        <li>Patterns of Enterprise Application Architecture — Martin Fowler</li>
+        <li>The Model Context Protocol specification and official documentation</li>
+        <li>Provider SDK documentation for model and API integration</li>
+      </ul>
+
+    </article>
+
+    <aside class="toc">
+      <h4>On this page</h4>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#diagram">Visual</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#examples">Real-world uses</a></li>
+        
+        <li><a href="#related">Related terms</a></li>
+        <li><a href="#reading">Further reading</a></li>
+      </ul>
+    </aside>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <a href="../index.html">&larr; Back to all terms</a>
+  </div>
+</footer>
+
+</body>
+</html>
