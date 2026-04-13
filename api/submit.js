@@ -224,7 +224,7 @@ Write with a warm, tutorial tone — like the best science explainers. Be precis
 
 async function generateTerms(openai, userRequest) {
   const resp = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: "gpt-5.4",
     response_format: { type: "json_object" },
     messages: [
       { role: "system", content: SYSTEM_PROMPT },
