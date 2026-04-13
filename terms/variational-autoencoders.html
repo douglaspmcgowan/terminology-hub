@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Variational Autoencoders — Terminology Hub</title>
+<link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="../index.html" class="site-logo">Terminology Hub</a>
+    <nav class="site-nav">
+      <a href="../index.html#terms">All Terms</a>
+      <a href="../index.html#disciplines">Disciplines</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <div class="term-page">
+
+    <article class="term-main">
+
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a> &rsaquo;
+        <a href="../index.html#terms">Terms</a> &rsaquo;
+        Variational Autoencoders
+      </div>
+
+      <h1>Variational Autoencoders (VAEs)</h1>
+
+      <div>
+        <span class="tag tag-gen">Generative</span>
+        <span class="tag tag-dl">Deep Learning</span>
+        <span class="tag tag-ml">Machine Learning</span>
+        <span class="tag tag-stats">Probability</span>
+      </div>
+
+      <div class="tldr">
+        <strong>TL;DR</strong>
+        <p>A VAE is a neural network that learns to <em>compress</em> data into
+        a small probabilistic "latent space," and then <em>reconstruct</em> it.
+        Because the latent space is probabilistic, you can sample new points
+        from it and decode them into novel outputs — making VAEs one of the
+        earliest and simplest deep generative models.</p>
+      </div>
+
+      <h2 id="overview">Overview</h2>
+      <p>
+        Imagine you have 60,000 pictures of handwritten digits. A VAE tries to
+        learn two things at once:
+      </p>
+      <ol>
+        <li>An <strong>encoder</strong> that turns each image into a short
+            list of numbers (say, 20 numbers instead of 784 pixels). This short
+            list is called the <strong>latent vector</strong>.</li>
+        <li>A <strong>decoder</strong> that turns that short list back into an image.</li>
+      </ol>
+      <p>
+        That much is just an <em>autoencoder</em>. What makes a VAE <em>variational</em>
+        is this: instead of the encoder producing a single latent vector, it
+        produces a <strong>probability distribution</strong> over possible latent
+        vectors — typically a Gaussian with a learned mean and variance. Training
+        also <em>regularizes</em> that distribution to stay close to a standard
+        normal <code>N(0, I)</code>.
+      </p>
+      <p>
+        Two consequences fall out of this:
+      </p>
+      <ul>
+        <li>The latent space becomes <em>smooth</em> and <em>continuous</em> — nearby points decode to similar-looking outputs.</li>
+        <li>You can <em>sample</em> a random latent vector from <code>N(0, I)</code>,
+            run it through the decoder, and get a plausible new image the model has never seen.</li>
+      </ul>
+
+      <h2 id="diagram">How It Works (Visual)</h2>
+      <figure>
+        <svg viewBox="0 0 900 340" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowVAE" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#3d5a80" />
+            </marker>
+          </defs>
+
+          <!-- Input -->
+          <rect x="20" y="120" width="100" height="100" rx="6"
+                fill="#faf8f3" stroke="#3d5a80" stroke-width="1.5"/>
+          <text x="70" y="165" text-anchor="middle" font-family="Iowan Old Style, Georgia, serif"
+                font-size="14" fill="#293241">Input</text>
+          <text x="70" y="185" text-anchor="middle" font-family="Iowan Old Style, Georgia, serif"
+                font-size="14" fill="#293241">x</text>
+          <text x="70" y="240" text-anchor="middle" font-size="11" fill="#6b6b6b">(e.g. image)</text>
+
+          <!-- Encoder (trapezoid) -->
+          <polygon points="150,100 260,140 260,200 150,240"
+                   fill="#dde7f0" stroke="#3d5a80" stroke-width="1.5"/>
+          <text x="205" y="175" text-anchor="middle" font-family="Iowan Old Style, Georgia, serif"
+                font-size="15" fill="#293241">Encoder</text>
+          <text x="205" y="195" text-anchor="middle" font-size="11" fill="#6b6b6b">q(z|x)</text>
+
+          <!-- μ and σ outputs -->
+          <rect x="295" y="105" width="90" height="45" rx="5"
+                fill="#fef3ee" stroke="#ee6c4d" stroke-width="1.5"/>
+          <text x="340" y="132" text-anchor="middle" font-family="Iowan Old Style, Georgia, serif"
+                font-size="16" fill="#8b3a1a">μ (mean)</text>
+
+          <rect x="295" y="190" width="90" height="45" rx="5"
+                fill="#fef3ee" stroke="#ee6c4d" stroke-width="1.5"/>
+          <text x="340" y="217" text-anchor="middle" font-family="Iowan Old Style, Georgia, serif"
+                font-size="16" fill="#8b3a1a">σ (std)</text>
+
+          <!-- Sample z -->
+          <circle cx="480" cy="170" r="38" fill="#e8dff5" stroke="#4b2e83" stroke-width="1.5"/>
+          <text x="480" y="167" text-anchor="middle" font-family="Iowan Old Style, Georgia, serif"
+                font-size="16" fill="#4b2e83">z</text>
+          <text x="480" y="185" text-anchor="middle" font-size="10" fill="#4b2e83">~ N(μ, σ²)</text>
+          <text x="480" y="235" text-anchor="middle" font-size="11" fill="#6b6b6b">latent sample</text>
+
+          <!-- Decoder (trapezoid) -->
+          <polygon points="560,140 670,100 670,240 560,200"
+                   fill="#d9efe0" stroke="#2c5e3f" stroke-width="1.5"/>
+          <text x="615" y="175" text-anchor="middle" font-family="Iowan Old Style, Georgia, serif"
+                font-size="15" fill="#2c5e3f">Decoder</text>
+          <text x="615" y="195" text-anchor="middle" font-size="11" fill="#2c5e3f">p(x|z)</text>
+
+          <!-- Output -->
+          <rect x="700" y="120" width="100" height="100" rx="6"
+                fill="#faf8f3" stroke="#3d5a80" stroke-width="1.5"/>
+          <text x="750" y="165" text-anchor="middle" font-family="Iowan Old Style, Georgia, serif"
+                font-size="14" fill="#293241">Output</text>
+          <text x="750" y="185" text-anchor="middle" font-family="Iowan Old Style, Georgia, serif"
+                font-size="14" fill="#293241">x̂</text>
+          <text x="750" y="240" text-anchor="middle" font-size="11" fill="#6b6b6b">(reconstruction)</text>
+
+          <!-- Arrows -->
+          <line x1="125" y1="170" x2="145" y2="170" stroke="#3d5a80" stroke-width="1.8"
+                marker-end="url(#arrowVAE)"/>
+          <line x1="265" y1="150" x2="290" y2="130" stroke="#3d5a80" stroke-width="1.5"
+                marker-end="url(#arrowVAE)"/>
+          <line x1="265" y1="190" x2="290" y2="210" stroke="#3d5a80" stroke-width="1.5"
+                marker-end="url(#arrowVAE)"/>
+          <line x1="390" y1="128" x2="445" y2="160" stroke="#3d5a80" stroke-width="1.5"
+                marker-end="url(#arrowVAE)"/>
+          <line x1="390" y1="210" x2="445" y2="182" stroke="#3d5a80" stroke-width="1.5"
+                marker-end="url(#arrowVAE)"/>
+          <line x1="520" y1="170" x2="555" y2="170" stroke="#3d5a80" stroke-width="1.8"
+                marker-end="url(#arrowVAE)"/>
+          <line x1="675" y1="170" x2="695" y2="170" stroke="#3d5a80" stroke-width="1.8"
+                marker-end="url(#arrowVAE)"/>
+
+          <!-- Training signal label -->
+          <text x="450" y="40" text-anchor="middle" font-family="Iowan Old Style, Georgia, serif"
+                font-size="14" fill="#293241" font-style="italic">
+            Training loss = reconstruction error + KL divergence
+          </text>
+          <line x1="70" y1="290" x2="750" y2="290" stroke="#d4cfc2"
+                stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="410" y="315" text-anchor="middle" font-size="12" fill="#6b6b6b">
+            Gradient flows back through the whole pipeline via the reparameterization trick.
+          </text>
+        </svg>
+        <figcaption>
+          The VAE pipeline: an encoder predicts a distribution over latents; a
+          sample is drawn; the decoder reconstructs the input from that sample.
+        </figcaption>
+      </figure>
+
+      <h2 id="training">The Two Forces That Train a VAE</h2>
+      <p>
+        VAEs are trained by minimizing a loss with <strong>two opposing terms</strong>:
+      </p>
+      <div class="math-block">
+        Loss = Reconstruction error + β · KL divergence
+      </div>
+      <dl class="keyterms">
+        <dt>Reconstruction error</dt>
+        <dd>"Did the decoder's output look like the original input?" Usually
+            mean-squared error for images or cross-entropy for binary data.
+            Pushes the network to encode useful detail.</dd>
+        <dt>KL divergence</dt>
+        <dd>"Is the encoder's distribution close to a standard normal?"
+            Measured by <code>KL( q(z|x) || N(0, I) )</code>. Pushes the latent
+            space to be smooth, centered, and samplable. Without this, a VAE
+            collapses into a regular autoencoder.</dd>
+      </dl>
+      <p>
+        These two pull in opposite directions: the reconstruction term wants
+        the encoder to be precise (use the whole latent space), while the KL
+        term wants it to stay tight around zero. The compromise is what gives
+        VAEs their generative ability.
+      </p>
+
+      <div class="callout">
+        <strong>The reparameterization trick.</strong> You can't backpropagate
+        through a random sample directly. The trick: instead of sampling
+        <code>z ~ N(μ, σ²)</code>, write <code>z = μ + σ · ε</code> where
+        <code>ε ~ N(0, 1)</code>. Now the randomness is an input, and
+        gradients flow cleanly through <code>μ</code> and <code>σ</code>.
+      </div>
+
+      <h2 id="examples">Real-World Examples</h2>
+      <div class="example-grid">
+        <div class="example-card">
+          <h4>Molecular design</h4>
+          <p>Encode molecules into a continuous latent space, then search or
+             optimize within that space to find novel compounds with desired
+             properties (e.g. drug candidates).</p>
+        </div>
+        <div class="example-card">
+          <h4>Anomaly detection</h4>
+          <p>Train a VAE on "normal" data (healthy ECGs, clean server logs).
+             When something unusual appears, the reconstruction error spikes —
+             a signal that something's off.</p>
+        </div>
+        <div class="example-card">
+          <h4>Face / image generation</h4>
+          <p>Sample from the latent prior and decode to get new synthetic
+             faces. Interpolating between two latents morphs smoothly from one
+             face to another.</p>
+        </div>
+        <div class="example-card">
+          <h4>Engineering design</h4>
+          <p>Parameterize complex geometries (airfoils, trusses, topology
+             layouts) as latent vectors. Optimization over a smooth latent
+             space is easier than over raw geometry.</p>
+        </div>
+        <div class="example-card">
+          <h4>Representation learning</h4>
+          <p>Use the encoder as a feature extractor. The latent vector is a
+             compact summary that can feed into classifiers or downstream
+             models.</p>
+        </div>
+        <div class="example-card">
+          <h4>Data imputation</h4>
+          <p>If pixels or sensor readings are missing, the VAE can fill them
+             in plausibly — useful in medical imaging and sensor networks.</p>
+        </div>
+      </div>
+
+      <h2 id="math">The Math (Lightly)</h2>
+      <p>
+        A VAE maximizes a quantity called the <strong>Evidence Lower Bound</strong> (ELBO):
+      </p>
+      <div class="math-block">
+        ELBO(x) = E_{q(z|x)}[ log p(x | z) ]  −  KL( q(z|x) || p(z) )
+      </div>
+      <p>
+        Intuitively: the first term is "how well does the decoder reconstruct <code>x</code>
+        from a <code>z</code> drawn by the encoder?" The second is "how far is the
+        encoder's distribution from the prior?" Maximizing the ELBO is
+        equivalent to minimizing the loss above.
+      </p>
+      <p>
+        It's called a <em>lower bound</em> because maximizing it also
+        maximizes (a bound on) the true likelihood <code>log p(x)</code> —
+        which is generally intractable to compute directly.
+      </p>
+
+      <h2 id="why">Why Papers Care</h2>
+      <ul>
+        <li>VAEs gave a clean, <em>principled</em> way to do deep generative
+            modeling — encoder, decoder, and a probabilistic story that ties
+            them together.</li>
+        <li>The latent space is <em>interpretable</em> and <em>interpolatable</em>.
+            Unlike GANs, you can embed real data points and move around.</li>
+        <li>They're foundational: diffusion models, normalizing flows, and
+            modern latent-variable systems all borrow intuitions from VAEs.</li>
+      </ul>
+
+      <h2 id="related">Related Terms</h2>
+      <div class="related-grid">
+        <a class="related-card" href="#">
+          <strong>Autoencoder</strong>
+          <span>The deterministic ancestor of the VAE.</span>
+        </a>
+        <a class="related-card" href="#">
+          <strong>GAN (Generative Adversarial Network)</strong>
+          <span>Alternative generative approach using a discriminator.</span>
+        </a>
+        <a class="related-card" href="#">
+          <strong>Diffusion Models</strong>
+          <span>Modern successor; often outperforms VAEs on image generation.</span>
+        </a>
+        <a class="related-card" href="#">
+          <strong>Latent Space</strong>
+          <span>The compressed representation where VAEs operate.</span>
+        </a>
+        <a class="related-card" href="#">
+          <strong>KL Divergence</strong>
+          <span>The "distance" measure between probability distributions.</span>
+        </a>
+        <a class="related-card" href="#">
+          <strong>ELBO</strong>
+          <span>The objective VAEs actually optimize.</span>
+        </a>
+        <a class="related-card" href="#">
+          <strong>Reparameterization Trick</strong>
+          <span>Enables gradients through a random sample.</span>
+        </a>
+        <a class="related-card" href="#">
+          <strong>Variational Inference</strong>
+          <span>The broader framework VAEs are a special case of.</span>
+        </a>
+      </div>
+
+      <h2 id="reading">Further Reading</h2>
+      <ul>
+        <li><em>Auto-Encoding Variational Bayes</em> — Kingma &amp; Welling (2013). The original VAE paper.</li>
+        <li><em>An Introduction to Variational Autoencoders</em> — Kingma &amp; Welling (2019). Book-length tutorial.</li>
+        <li><em>Tutorial on Variational Autoencoders</em> — Carl Doersch (2016). A readable walkthrough with math.</li>
+      </ul>
+
+    </article>
+
+    <aside class="toc">
+      <h4>On this page</h4>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#diagram">Visual</a></li>
+        <li><a href="#training">Training</a></li>
+        <li><a href="#examples">Real-world uses</a></li>
+        <li><a href="#math">The math</a></li>
+        <li><a href="#why">Why papers care</a></li>
+        <li><a href="#related">Related terms</a></li>
+        <li><a href="#reading">Further reading</a></li>
+      </ul>
+    </aside>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <a href="../index.html">&larr; Back to all terms</a>
+  </div>
+</footer>
+
+</body>
+</html>

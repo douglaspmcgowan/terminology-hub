@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Paper Terminology Hub</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="index.html" class="site-logo">Terminology Hub</a>
+    <nav class="site-nav">
+      <a href="#terms">All Terms</a>
+      <a href="#disciplines">Disciplines</a>
+      <a href="#submit">Add Terms</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <h1>Paper Terminology Hub</h1>
+    <p class="subtitle">
+      A personal reference for the words, methods, and ideas that show up
+      across the research papers I'm reading.
+    </p>
+  </section>
+
+  <section id="terms">
+
+    <div class="controls">
+      <input
+        type="text"
+        id="search"
+        class="search-box"
+        placeholder="Search terms (e.g. 'variational', 'reward')..."
+        autocomplete="off"
+      />
+      <div class="filter-group" id="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="ml">Machine Learning</button>
+        <button class="filter-btn" data-filter="dl">Deep Learning</button>
+        <button class="filter-btn" data-filter="gen">Generative Models</button>
+        <button class="filter-btn" data-filter="rl">Reinforcement Learning</button>
+      </div>
+    </div>
+
+    <div class="term-grid" id="term-grid">
+
+      <a class="term-card" href="terms/variational-autoencoders.html"
+         data-tags="dl gen ml stats"
+         data-search="variational autoencoder vae latent generative encoder decoder">
+        <span class="tag tag-gen">Generative</span>
+        <span class="tag tag-dl">Deep Learning</span>
+        <h3>Variational Autoencoders (VAEs)</h3>
+        <p>A neural network that learns to compress data into a probabilistic
+           latent space, then reconstruct (or generate new) samples from it.</p>
+      </a>
+
+      <a class="term-card" href="terms/reinforcement-learning.html"
+         data-tags="ml rl"
+         data-search="reinforcement learning rl agent environment reward policy mdp">
+        <span class="tag tag-rl">Reinforcement Learning</span>
+        <span class="tag tag-ml">Machine Learning</span>
+        <h3>Reinforcement Learning</h3>
+        <p>An agent learns to act in an environment by trying things and
+           receiving rewards, gradually improving a policy through trial and error.</p>
+      </a>
+
+    </div>
+  </section>
+
+  <section id="submit" style="margin-top:4rem;">
+    <h2>Add New Terms</h2>
+    <p style="color:var(--muted);">
+      Describe the terms you want in plain language — a single term, a list,
+      or a paragraph from a paper. New pages get generated and pushed to the
+      site automatically (takes ~30–60 seconds).
+    </p>
+    <form id="submit-form" style="margin-top:1.5rem;">
+      <textarea
+        id="submit-text"
+        rows="4"
+        placeholder="e.g. 'Make pages on transformers, attention, and positional encoding' — or paste any text and I'll extract the terms."
+        style="width:100%;padding:1rem;font-size:1rem;font-family:inherit;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface);color:var(--ink);resize:vertical;"
+      ></textarea>
+      <div style="margin-top:1rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
+        <button
+          type="submit"
+          id="submit-btn"
+          style="padding:0.75rem 1.5rem;font-size:1rem;font-family:inherit;background:var(--accent-ink);color:white;border:none;border-radius:8px;cursor:pointer;"
+        >Generate Pages</button>
+        <span id="submit-status" style="color:var(--muted);font-size:0.95rem;"></span>
+      </div>
+    </form>
+    <div id="submit-result" style="margin-top:1.5rem;"></div>
+  </section>
+
+  <section id="disciplines" style="margin-top:4rem;">
+    <h2>Browse by Discipline</h2>
+    <p style="color:var(--muted);">
+      Terms are tagged by the subfields they belong to. Use the filters above
+      to narrow the grid, or search by keyword.
+    </p>
+    <div class="example-grid">
+      <div class="example-card">
+        <h4>Machine Learning</h4>
+        <p>Statistical methods that learn patterns from data — the umbrella field.</p>
+      </div>
+      <div class="example-card">
+        <h4>Deep Learning</h4>
+        <p>ML using neural networks with many layers. Dominant for vision, language, audio.</p>
+      </div>
+      <div class="example-card">
+        <h4>Generative Models</h4>
+        <p>Models that learn a data distribution well enough to sample new examples from it.</p>
+      </div>
+      <div class="example-card">
+        <h4>Reinforcement Learning</h4>
+        <p>Learning from interaction: an agent, an environment, rewards, and a policy.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    Built as a living reference · Add new terms as you read.
+  </div>
+</footer>
+
+<script>
+  // Search filter
+  const search = document.getElementById('search');
+  const cards = document.querySelectorAll('.term-card');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  let activeFilter = 'all';
+
+  function applyFilters() {
+    const q = search.value.trim().toLowerCase();
+    cards.forEach(card => {
+      const tags = (card.dataset.tags || '').split(' ');
+      const haystack = (card.dataset.search || '') + ' ' + card.textContent.toLowerCase();
+      const matchesFilter = activeFilter === 'all' || tags.includes(activeFilter);
+      const matchesSearch = !q || haystack.toLowerCase().includes(q);
+      card.classList.toggle('hidden', !(matchesFilter && matchesSearch));
+    });
+  }
+
+  search.addEventListener('input', applyFilters);
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      applyFilters();
+    });
+  });
+
+  // Submit form
+  const form = document.getElementById('submit-form');
+  const text = document.getElementById('submit-text');
+  const btn = document.getElementById('submit-btn');
+  const status = document.getElementById('submit-status');
+  const resultBox = document.getElementById('submit-result');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const request = text.value.trim();
+    if (!request) return;
+
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    status.textContent = 'Generating pages... this takes 30–60 seconds.';
+    resultBox.innerHTML = '';
+
+    try {
+      const resp = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ request })
+      });
+      const data = await resp.json();
+
+      if (!resp.ok) throw new Error(data.error || 'Request failed');
+
+      status.textContent = 'Pages committed. Vercel is redeploying (usually 20–40s).';
+      const items = data.terms.map(t =>
+        `<li><strong>${t.title}</strong> — will be at <code>${t.url}</code></li>`
+      ).join('');
+      resultBox.innerHTML = `
+        <div style="background:#f0f5fa;border-left:3px solid var(--accent);padding:1rem 1.3rem;border-radius:0 6px 6px 0;">
+          <p style="margin:0 0 0.5em;"><strong>Added ${data.terms.length} term(s):</strong></p>
+          <ul style="margin:0;padding-left:1.3em;">${items}</ul>
+          <p style="margin:0.8em 0 0;font-size:0.9rem;color:var(--muted);">
+            Refresh the page in about a minute to see them appear.
+          </p>
+        </div>`;
+      text.value = '';
+    } catch (err) {
+      status.textContent = '';
+      resultBox.innerHTML = `
+        <div style="background:#fef3ee;border-left:3px solid var(--highlight);padding:1rem 1.3rem;border-radius:0 6px 6px 0;">
+          <strong>Error:</strong> ${err.message}
+        </div>`;
+    } finally {
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
+  });
+</script>
+
+</body>
+</html>

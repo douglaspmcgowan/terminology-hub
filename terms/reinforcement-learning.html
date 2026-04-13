@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reinforcement Learning — Terminology Hub</title>
+<link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="../index.html" class="site-logo">Terminology Hub</a>
+    <nav class="site-nav">
+      <a href="../index.html#terms">All Terms</a>
+      <a href="../index.html#disciplines">Disciplines</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <div class="term-page">
+
+    <article class="term-main">
+
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a> &rsaquo;
+        <a href="../index.html#terms">Terms</a> &rsaquo;
+        Reinforcement Learning
+      </div>
+
+      <h1>Reinforcement Learning</h1>
+
+      <div>
+        <span class="tag tag-rl">Reinforcement Learning</span>
+        <span class="tag tag-ml">Machine Learning</span>
+        <span class="tag tag-stats">Decision Theory</span>
+      </div>
+
+      <div class="tldr">
+        <strong>TL;DR</strong>
+        <p>Reinforcement learning (RL) is how a computer learns to make
+        decisions by trying them out. An <em>agent</em> takes actions in an
+        <em>environment</em>, receives <em>rewards</em>, and gradually
+        improves the rule it uses to pick actions (its <em>policy</em>).
+        Unlike supervised learning, nobody tells it the right answer — only
+        whether things went well.</p>
+      </div>
+
+      <h2 id="overview">Overview</h2>
+      <p>
+        Think about how a dog learns a trick. You don't hand it a labeled
+        dataset. You let it try things — and when it does something you like,
+        it gets a treat. Over time, it learns which actions tend to earn
+        treats in which situations. That is essentially the RL setup.
+      </p>
+      <p>
+        Five ingredients show up in almost every RL paper:
+      </p>
+      <dl class="keyterms">
+        <dt>Agent</dt>
+        <dd>The learner / decision-maker. This is what we're training.</dd>
+        <dt>Environment</dt>
+        <dd>Everything outside the agent — the world it acts in.</dd>
+        <dt>State (<code>s</code>)</dt>
+        <dd>A snapshot of the environment the agent can observe.</dd>
+        <dt>Action (<code>a</code>)</dt>
+        <dd>A move the agent can make.</dd>
+        <dt>Reward (<code>r</code>)</dt>
+        <dd>A scalar number the environment returns after each action.
+            Positive = good, negative = bad.</dd>
+      </dl>
+      <p>
+        The agent's goal is simple to state and hard to achieve: <strong>maximize
+        the total reward it expects to collect over time.</strong>
+      </p>
+
+      <h2 id="diagram">The Core Loop (Visual)</h2>
+      <figure>
+        <svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowRL" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#3d5a80" />
+            </marker>
+          </defs>
+
+          <!-- Agent -->
+          <rect x="80" y="140" width="200" height="110" rx="10"
+                fill="#fde4d3" stroke="#8b3a1a" stroke-width="2"/>
+          <text x="180" y="185" text-anchor="middle"
+                font-family="Iowan Old Style, Georgia, serif" font-size="22" fill="#8b3a1a">
+            Agent
+          </text>
+          <text x="180" y="215" text-anchor="middle" font-size="13" fill="#8b3a1a">
+            (has a policy π)
+          </text>
+
+          <!-- Environment -->
+          <rect x="480" y="140" width="200" height="110" rx="10"
+                fill="#dde7f0" stroke="#2a4a6b" stroke-width="2"/>
+          <text x="580" y="185" text-anchor="middle"
+                font-family="Iowan Old Style, Georgia, serif" font-size="22" fill="#2a4a6b">
+            Environment
+          </text>
+          <text x="580" y="215" text-anchor="middle" font-size="13" fill="#2a4a6b">
+            (the world, game, sim...)
+          </text>
+
+          <!-- Action arrow (top, agent -> env) -->
+          <path d="M 280 175 Q 380 90 480 175" fill="none"
+                stroke="#8b3a1a" stroke-width="2" marker-end="url(#arrowRL)"/>
+          <text x="380" y="100" text-anchor="middle"
+                font-family="Iowan Old Style, Georgia, serif" font-size="16" fill="#8b3a1a">
+            Action a_t
+          </text>
+
+          <!-- State + reward arrow (bottom, env -> agent) -->
+          <path d="M 480 220 Q 380 310 280 220" fill="none"
+                stroke="#2a4a6b" stroke-width="2" marker-end="url(#arrowRL)"/>
+          <text x="380" y="320" text-anchor="middle"
+                font-family="Iowan Old Style, Georgia, serif" font-size="16" fill="#2a4a6b">
+            State s_{t+1}, Reward r_{t+1}
+          </text>
+
+          <!-- Time step indicator -->
+          <text x="380" y="40" text-anchor="middle"
+                font-family="Iowan Old Style, Georgia, serif" font-size="16"
+                font-style="italic" fill="#293241">
+            Repeat for every time step t
+          </text>
+
+          <!-- Bottom caption -->
+          <text x="380" y="365" text-anchor="middle" font-size="12" fill="#6b6b6b">
+            The agent learns by adjusting its policy based on the rewards it observes.
+          </text>
+        </svg>
+        <figcaption>
+          The agent–environment interaction loop at the heart of every RL algorithm.
+        </figcaption>
+      </figure>
+
+      <h2 id="policy-value">Policy, Value, and the Tradeoff</h2>
+      <p>
+        Two quantities do most of the work in RL:
+      </p>
+      <dl class="keyterms">
+        <dt>Policy (<code>π</code>)</dt>
+        <dd>The agent's strategy — a rule that maps states to actions (or to
+            probabilities over actions). "In this situation, do this."</dd>
+        <dt>Value function (<code>V</code> or <code>Q</code>)</dt>
+        <dd>An estimate of how good it is to be in a state (or to take a
+            specific action in a state), measured by the total future reward
+            the agent expects to get.</dd>
+      </dl>
+      <p>
+        A big part of RL theory is figuring out the relationship between
+        policies and values — and how to update one using the other.
+      </p>
+
+      <div class="callout">
+        <strong>Exploration vs. exploitation.</strong> Early on, the agent has
+        no idea which actions are good, so it has to <em>explore</em>. But if
+        it explores forever, it never profits from what it's learned. If it
+        <em>exploits</em> too early, it locks in on a mediocre strategy. Every
+        RL algorithm has to manage this tradeoff — usually with a schedule
+        (e.g. "random 10% of the time") or a smarter scheme.
+      </div>
+
+      <h2 id="mdp">Markov Decision Processes (the formal stage)</h2>
+      <p>
+        Most RL assumes the environment is a <strong>Markov Decision Process (MDP)</strong>:
+        a setting where the next state depends only on the current state and
+        action, not on the entire history. An MDP is described by four things:
+      </p>
+      <div class="math-block">
+        MDP = (S, A, P, R)<br>
+        S = set of states · A = set of actions<br>
+        P(s' | s, a) = transition probability · R(s, a) = reward function
+      </div>
+      <p>
+        Once you cast a problem as an MDP, the goal is to find a policy
+        <code>π</code> that maximizes expected cumulative reward — often
+        written:
+      </p>
+      <div class="math-block">
+        max<sub>π</sub>  E[ Σ<sub>t</sub> γ<sup>t</sup> · r<sub>t</sub> ]
+      </div>
+      <p>
+        The <code>γ</code> (gamma) is a <strong>discount factor</strong>
+        between 0 and 1 — it controls how much the agent cares about
+        long-term vs. short-term rewards.
+      </p>
+
+      <h2 id="families">The Main Families of RL Algorithms</h2>
+      <div class="example-grid">
+        <div class="example-card">
+          <h4>Value-based</h4>
+          <p>Learn <code>Q(s, a)</code> — the expected value of taking action
+             <code>a</code> in state <code>s</code>. Act greedily with respect
+             to it. Examples: <em>Q-learning</em>, <em>DQN</em>.</p>
+        </div>
+        <div class="example-card">
+          <h4>Policy-based</h4>
+          <p>Directly parameterize and optimize the policy itself. No value
+             function needed. Examples: <em>REINFORCE</em>, <em>PPO</em>.</p>
+        </div>
+        <div class="example-card">
+          <h4>Actor–Critic</h4>
+          <p>Mixes both: an "actor" picks actions (policy) and a "critic"
+             estimates values. Most modern deep-RL algorithms live here.</p>
+        </div>
+        <div class="example-card">
+          <h4>Model-based</h4>
+          <p>Learn a model of the environment's dynamics, then plan inside it.
+             Data-efficient but harder to get right. Examples: <em>Dyna</em>,
+             <em>MuZero</em>.</p>
+        </div>
+      </div>
+
+      <h2 id="examples">Real-World Examples</h2>
+      <div class="example-grid">
+        <div class="example-card">
+          <h4>Game playing</h4>
+          <p>AlphaGo, AlphaZero, and OpenAI Five all learned superhuman play
+             through RL — state = board/game, action = move, reward = win/loss.</p>
+        </div>
+        <div class="example-card">
+          <h4>Robotics</h4>
+          <p>Teaching a robot arm to grasp or a quadruped to walk. Actions are
+             motor torques; rewards encode stability, speed, or task progress.</p>
+        </div>
+        <div class="example-card">
+          <h4>RLHF in LLMs</h4>
+          <p><em>Reinforcement Learning from Human Feedback</em> — the
+             technique behind ChatGPT-style training. Human preferences
+             become the reward signal.</p>
+        </div>
+        <div class="example-card">
+          <h4>Recommendation systems</h4>
+          <p>Framed as choosing what to show a user to maximize long-term
+             engagement, not just the next click.</p>
+        </div>
+        <div class="example-card">
+          <h4>Operations research</h4>
+          <p>Inventory management, energy grid control, traffic light
+             scheduling — anything with sequential decisions and delayed payoff.</p>
+        </div>
+        <div class="example-card">
+          <h4>Drug &amp; molecule design</h4>
+          <p>Treat molecule construction as a sequence of "add this atom"
+             actions, with reward tied to desired chemical properties.</p>
+        </div>
+      </div>
+
+      <h2 id="challenges">Why RL Is Hard (and Interesting)</h2>
+      <ul>
+        <li><strong>Credit assignment.</strong> If you win a chess game after
+            40 moves, which moves were actually responsible? Reward may be
+            delayed by many steps.</li>
+        <li><strong>Sample efficiency.</strong> Deep RL typically needs
+            millions of interactions. Fine for simulators; painful in
+            physical systems.</li>
+        <li><strong>Reward design.</strong> Poorly-specified rewards lead to
+            "reward hacking" — agents exploit loopholes rather than solve the
+            intended task.</li>
+        <li><strong>Stability.</strong> Neural-network-based value functions
+            can diverge during training. Lots of modern research is about
+            taming this.</li>
+      </ul>
+
+      <h2 id="related">Related Terms</h2>
+      <div class="related-grid">
+        <a class="related-card" href="#">
+          <strong>Markov Decision Process</strong>
+          <span>Formal description of an RL environment.</span>
+        </a>
+        <a class="related-card" href="#">
+          <strong>Q-learning</strong>
+          <span>Classic value-based RL algorithm.</span>
+        </a>
+        <a class="related-card" href="#">
+          <strong>Policy Gradient</strong>
+          <span>Directly optimize the policy via gradient ascent on reward.</span>
+        </a>
+        <a class="related-card" href="#">
+          <strong>PPO (Proximal Policy Optimization)</strong>
+          <span>Workhorse modern policy-gradient method.</span>
+        </a>
+        <a class="related-card" href="#">
+          <strong>RLHF</strong>
+          <span>RL with human feedback as reward; used in ChatGPT, Claude, etc.</span>
+        </a>
+        <a class="related-card" href="#">
+          <strong>Bellman Equation</strong>
+          <span>The recursive identity value functions satisfy.</span>
+        </a>
+        <a class="related-card" href="#">
+          <strong>Exploration vs Exploitation</strong>
+          <span>The fundamental tradeoff in learning by interaction.</span>
+        </a>
+        <a class="related-card" href="#">
+          <strong>Model-based RL</strong>
+          <span>Learn a world model, then plan.</span>
+        </a>
+      </div>
+
+      <h2 id="reading">Further Reading</h2>
+      <ul>
+        <li><em>Reinforcement Learning: An Introduction</em> — Sutton &amp;
+            Barto. The canonical textbook. Free online.</li>
+        <li><em>Spinning Up in Deep RL</em> — OpenAI. Hands-on tutorial with
+            code for all major algorithms.</li>
+        <li><em>Human-level control through deep reinforcement learning</em>
+            — Mnih et al. (2015). The DQN paper.</li>
+        <li><em>Proximal Policy Optimization</em> — Schulman et al. (2017).</li>
+      </ul>
+
+    </article>
+
+    <aside class="toc">
+      <h4>On this page</h4>
+      <ul>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#diagram">Visual</a></li>
+        <li><a href="#policy-value">Policy &amp; value</a></li>
+        <li><a href="#mdp">MDPs</a></li>
+        <li><a href="#families">Algorithm families</a></li>
+        <li><a href="#examples">Real-world uses</a></li>
+        <li><a href="#challenges">Why it's hard</a></li>
+        <li><a href="#related">Related terms</a></li>
+        <li><a href="#reading">Further reading</a></li>
+      </ul>
+    </aside>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <a href="../index.html">&larr; Back to all terms</a>
+  </div>
+</footer>
+
+</body>
+</html>
